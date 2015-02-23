@@ -53,11 +53,13 @@ class tempest::provision (
       password    => $password,
     }
 
+    $only_extra_roles = $user_extra_roles
+
     $user_roles = concat($user_extra_roles,['_member_'])
 
     keystone_user_role {"${username}@${tenantname}":
-      roles   => [$user_roles],
-      require => Keystone_role[$user_extra_roles],
+      roles   => [$user_extra_roles],
+      require => Keystone_role[$only_extra_roles],
     }
   }
 
