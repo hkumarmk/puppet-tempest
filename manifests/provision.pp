@@ -7,6 +7,7 @@
 class tempest::provision (
   $image_public     = 'yes',
   $image_source     = 'http://download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img',
+  $image_format     = 'qcow2',
   $imagename        = undef,
   $alt_image_source = undef,
   $alt_imagename    = undef,
@@ -98,13 +99,18 @@ class tempest::provision (
 
 
   if $imagename {
-  glance_image { $imagename:
-    ensure           => present,
-    is_public        => $image_public,
-    container_format => 'bare',
-    disk_format      => 'qcow2',
-    source           => $image_source,
-  }
+    include staging
+    staging::file {$imagename:
+      source => $image_source,
+    }
+
+#    glance_image { $imagename:
+#      ensure           => present,
+#      is_public        => $image_public,
+#      container_format => 'bare',
+#      disk_format      => 'qcow2',
+#      source           => $image_source,
+#    }
   }
 
   if ($alt_imagename) and  ($alt_image_source) {
